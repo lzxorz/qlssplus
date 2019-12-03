@@ -1,0 +1,9 @@
+<view class="more-details">
+    <view catchtap="openFeature" class="details-list" data-type="{{item.type}}" wx:for="{{features}}" wx:key="index">
+        <image src="{{item.icon}}"></image>
+        <view class="list-text">
+            <text class="title">{{item.title}}</text>
+            <text class="dec">{{item.description}}</text>
+        </view>
+    </view>
+</view>

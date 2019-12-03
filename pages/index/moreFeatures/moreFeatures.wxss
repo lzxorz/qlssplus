@@ -1,0 +1,70 @@
+page {
+    background: rgba(240,240,240,0.80);
+}
+
+.details-list {
+    display: flex;
+    align-items: center;
+    margin-left: 30rpx;
+    margin-right: 30rpx;
+    background: #ffffff;
+    box-shadow: 1px 1px 8px 0 rgba(0,0,0,0.10);
+    border-radius: 8rpx;
+    height: 180rpx;
+    padding: 0 32rpx;
+    margin-top: 32rpx;
+}
+
+.details-list image {
+    width: 100rpx;
+    height: 100rpx;
+    margin-right: 16rpx;
+}
+
+.details-list text {
+    display: block;
+}
+
+.details-list text.title {
+    font-size: 36rpx;
+    color: #242424;
+}
+
+.details-list text.dec {
+    font-size: 28rpx;
+    color: #666666;
+    padding-top: 8rpx;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 1;
+}
+
+.list-text {
+    margin-right: 20rpx;
+    flex: 1;
+}
+
+.details-list button {
+    background: #4C9AFA;
+    border-radius: 100px;
+    color: #ffffff;
+}
+
+.icon-add {
+    width: 120rpx;
+    height: 80rpx;
+    position: fixed;
+    bottom: 10rpx;
+    left: 50%;
+    margin-left: -40rpx;
+    z-index: 999999;
+}
+
+.icon-add image {
+    width: 120rpx;
+    height: 80rpx;
+    vertical-align: top;
+    border: 0;
+}

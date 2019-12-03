@@ -1,0 +1,14 @@
+<view class="power">
+    <text class="title">群里说事儿plus</text>
+    <view class="dec">
+        <text>高效管理微信群</text>
+        <text>群通知、群打卡、群投票</text>
+    </view>
+    <view class="power-btn">
+      <view wx:if="{{canIUse}}" >
+        <button bindgetuserinfo="getUserLoginInfo" class="yellowbtn" openType="getUserInfo">授权并登录</button>
+      </view>
+      <view wx:else>请升级微信版本</view>
+    </view>
+    <view class="helper">了解一下</view>
+</view>

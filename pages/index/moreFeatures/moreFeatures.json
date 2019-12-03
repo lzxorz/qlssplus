@@ -1,0 +1,7 @@
+{
+    "navigationBarTitleText": "更多功能",
+    "enablePullDownRefresh": true,
+    "backgroundColor": "#EFEFEF",
+    "navigationBarBackgroundColor": "#4C9AFA",
+    "navigationBarTextStyle": "white"
+}

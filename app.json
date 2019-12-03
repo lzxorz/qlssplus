@@ -1,0 +1,26 @@
+{
+  "pages": [
+    "pages/index/index",
+    "pages/loginView/loginView",
+    "pages/logs/logs",
+    "pages/index/moreFeatures/moreFeatures"
+  ],
+  "window": {
+    "navigationBarBackgroundColor": "#4C9AFA",
+    "navigationBarTitleText": "群里说事儿plus",
+    "navigationBarTextStyle": "white",
+    "enablePullDownRefresh": true,
+    "backgroundTextStyle": "light",
+    "backgroundColor": "#EFEFEF"
+  },
+  "networkTimeout": {
+    "request": 10000,
+    "connectSocket": 10000,
+    "uploadFile": 10000,
+    "downloadFile": 10000
+  },
+  "navigateToMiniProgramAppIdList": [],
+  "debug": true,
+  "style": "v2",
+  "sitemapLocation": "sitemap.json"
+}

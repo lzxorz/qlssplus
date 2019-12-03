@@ -1,0 +1,321 @@
+<!--index.wxml-->
+<view class="{{isShowChoice?'home blur-bj':'home'}}">
+  <!-- 首页菜单 -->
+  <view class="home-menu">
+    <view bindtap="viewGridDetail" class="list">
+      <view class="list-content">
+        <image src="../../images/index-notice.png" data-url="notice" />
+        <text>通知</text>
+      </view>
+      <view class="list-content">
+        <image src="../../images/index-sign.png" data-url="sign" />
+        <text>签到</text>
+      </view>
+      <view class="list-content">
+        <image src="../../images/index-vote.png" data-url="vote" />
+        <text>投票</text>
+      </view>
+      <view class="list-content">
+        <image src="../../images/index-activity.png" data-url="activity" />
+        <text>活动</text>
+      </view>
+      <view class="list-content">
+        <image src="../../images/index-more.png" data-url="moreFeatures" />
+        <text>更多</text>
+      </view>
+    </view>
+  </view>
+  <!-- 动态内容--begin -->
+  <view class="home-content">
+    <!-- 新手引导 -->
+    <view catchtap="openGuideView" class="forbidden" wx:if="{{postListData.records.length==0}}">
+      <image src="http://res.imtt.qq.com/wZoneMiniApp/empty.png"></image>
+      <text>点击查看新手引导</text>
+    </view>
+    <view wx:if="{{openGid}}" class='groupName'>
+    群名称：<open-data type="groupName" open-gid="{{openGid}}"></open-data>
+    </view>
+    <block wx:for="{{postListData.records}}" wx:for-item="post" wx:key="posts">
+        <!-- 投票 -->
+        <view catchtap="goDetail" class="dynamic" data-id="{{post.postId}}" data-xcxposttype="xcxPostTypeVote" wx:if="{{post.postField.params.xcxPostType=='xcxPostTypeVote'&&post.Info.partInCount!=='null'}}">
+            <view class="dynamic-box">
+                <image class="top" hidden="{{post.postType!=1}}" src="/images/top.png"></image>
+                <view class="people-message">
+                    <view class="people-left">
+                        <image src="{{post.postUser.faceIcon}}"></image>
+                        <view class="text">
+                            <view class="title">
+                                <text class="name">{{post.postUser.nickname}}</text>
+                                <text class="hint">发起了一项投票</text>
+                            </view>
+                            <text class="time">{{post.elapseTime}}</text>
+                        </view>
+                    </view>
+                    <view catchtap="showSelectList" class="select-box" data-id="{{post.postId}}" wx:if="{{isAdminUser}}">
+                        <image src="/images/select-arrow.png"></image>
+                        <view class="select-list" hidden="{{!post.isShowSelectList}}">
+                            <view catchtap="deletePost" class="del" data-id="{{post.postId}}" data-xcxposttype="{{post.postField.params.xcxPostType}}">删除</view>
+                            <view catchtap="OPTopPost" data-set="{{post.postType}}">{{post.postType==1?'取消置顶':'置顶'}}</view>
+                        </view>
+                    </view>
+                    <block wx:else>
+                        <view catchtap="deletePost" class="delete" data-id="{{post.postId}}" data-punchId="{{post.postField.params.xcxPunchId}}" data-xcxposttype="{{post.postField.params.xcxPostType}}" wx:if="{{post.canDeleted}}">删除</view>
+                    </block>
+                </view>
+                <view class="dynamic-vote">
+                    <view class="{{post.Info.isExpiry?'lab end':'lab'}}">{{post.Info.isExpiry?'已结束':'进行中'}}</view>
+                    <view class="vote-top">
+                        <image src="../../images/vote1.png"></image>
+                        <text>{{post.postField.params.xcxPostTitle}}</text>
+                    </view>
+                    <view class="vote-dec">
+                        <text>{{post.Info.isExpiry?'投票已结束':'距离结束还'}} <text class="time" hidden="{{post.Info.isExpiry}}">{{post.Info.countdownStr}}</text>
+                        </text>
+                        <text>参与人数 <text class="people">{{post.Info.partInCount}}人</text>
+                        </text>
+                    </view>
+                </view>
+            </view>
+            <view class="dynamic-footer">
+                <view catchtap="goBrowseListDetail" class="icon" data-id="{{post.postId}}" data-xcxposttype="{{post.postField.params.xcxPostType}}">
+                    <image src="../../images/look.png"></image>
+                    <text>{{post.browseRecords||0}}</text>
+                </view>
+                <view catchtap="goDetail" class="icon" data-id="{{post.postId}}">
+                    <image src="../../images/comment.png"></image>
+                    <text>{{post.commentNum}}</text>
+                </view>
+                <view catchtap="praiseButtonTap" class="icon" data-id="{{post.postId}}">
+                    <image src="../../images/praise.png"></image>
+                    <text>{{post.praiseNum}}</text>
+                </view>
+            </view>
+        </view>
+        <!-- 通知 -->
+        <view catchtap="goDetail" class="dynamic" data-id="{{post.postId}}" data-xcxposttype="xcxPostTypeNotice" wx:if="{{post.postField.params.xcxPostType=='xcxPostTypeNotice'}}">
+            <view class="dynamic-box">
+                <image class="top" hidden="{{post.postType!=1}}" src="/images/top.png"></image>
+                <view class="people-message">
+                    <view class="people-left">
+                        <image src="{{post.postUser.faceIcon}}"></image>
+                        <view class="text">
+                            <view class="title">
+                                <text class="name">{{post.postUser.nickname}}</text>
+                                <text class="hint">发布了一则通知</text>
+                            </view>
+                            <text class="time">{{post.elapseTime}}</text>
+                        </view>
+                    </view>
+                    <view catchtap="showSelectList" class="select-box" data-id="{{post.postId}}" wx:if="{{isAdminUser}}">
+                        <image src="/images/select-arrow.png"></image>
+                        <view class="select-list" hidden="{{!post.isShowSelectList}}">
+                            <view catchtap="deletePost" class="del" data-id="{{post.postId}}" data-xcxposttype="{{post.postField.params.xcxPostType}}">删除</view>
+                            <view catchtap="OPTopPost" data-set="{{post.postType}}">{{post.postType==1?'取消置顶':'置顶'}}</view>
+                        </view>
+                    </view>
+                    <block wx:else>
+                        <view catchtap="deletePost" class="delete" data-id="{{post.postId}}" data-punchId="{{post.postField.params.xcxPunchId}}" data-xcxposttype="{{post.postField.params.xcxPostType}}" wx:if="{{post.canDeleted}}">删除</view>
+                    </block>
+                </view>
+                <view class="dynamic-Notice">
+                    <view class="NoticeCover-img" wx:if="{{post.noticeInfo&&post.noticeInfo.notice_model_id&&post.noticeInfo.notice_model_id!='model_000'&&post.noticeInfo.notice_model_id!='model_default'}}">
+                        <image src="{{post.noticeInfo.notice_model_id}}" wx:if="{{post.noticeInfo.notice_model_title=='uploadCover'}}"></image>
+                        <image src="http://res.imtt.qq.com/wZoneMiniApp/notice/{{post.noticeInfo.notice_model_id}}.png" wx:else></image>
+                    </view>
+                    <view class="NoticeCover-edit" wx:elif="{{post.noticeInfo&&post.noticeInfo.notice_show_name}}">
+                        <view class="edit-title">{{post.noticeInfo&&post.noticeInfo.notice_model_id=='model_000'&&post.noticeInfo.notice_title?post.noticeInfo.notice_title:!post.noticeInfo.notice_model_id||!post.noticeInfo.notice_model_title?'群通知':post.noticeInfo.notice_model_title}}</view>
+                        <text class="edit-date">本群发[{{post.noticeInfo&&post.noticeInfo.publishYear||2018}}]{{post.noticeInfo&&post.noticeInfo.notice_filenumber}}号</text>
+                        <view class="star">
+                            <view class="star-left"></view>
+                            <image src="../../images/Star2.png"></image>
+                            <view class="star-right"></view>
+                        </view>
+                    </view>
+                    <view class="Notice-text">
+                        <view class="title">{{post.postField.params.xcxPostContent}}</view>
+                        <view class="right">
+                            <text>{{post.elapseTime}}</text>
+                            <text>{{post.noticeInfo.notice_show_name}}</text>
+                        </view>
+                    </view>
+                </view>
+            </view>
+            <view class="dynamic-footer">
+                <view catchtap="goBrowseListDetail" class="icon" data-id="{{post.postId}}" data-xcxposttype="{{post.postField.params.xcxPostType}}">
+                    <image src="../../images/look.png"></image>
+                    <text>{{post.browseRecords||0}}</text>
+                </view>
+                <view catchtap="goDetail" class="icon" data-id="{{post.postId}}">
+                    <image src="../../images/comment.png"></image>
+                    <text>{{post.commentNum}}</text>
+                </view>
+                <view catchtap="praiseButtonTap" class="icon" data-id="{{post.postId}}">
+                    <image src="../../images/praise.png"></image>
+                    <text>{{post.praiseNum}}</text>
+                </view>
+            </view>
+        </view>
+        <!-- 打卡任务 -->
+        <view catchtap="goDetail" class="dynamic" data-id="{{post.postId}}" data-xcxposttype="xcxPunchTask" wx:if="{{post.postField.params.xcxPostType=='xcxPunchTask'}}">
+            <view class="dynamic-box" wx:if="{{post.postField.params.xcxPunchTask=='Punch_Detail'}}">
+                <image class="top" hidden="{{post.postType!=1}}" src="/images/top.png"></image>
+                <view class="people-message">
+                    <view class="people-left">
+                        <image src="{{post.postUser.faceIcon}}"></image>
+                        <view class="text">
+                            <view class="title">
+                                <text class="name">{{post.postUser.nickname}}</text>
+                                <view catchtap="openPunchTask" class="hint2" data-punchid="{{post.postField.params.xcxPunchId}}">
+                                    <text>坚持</text>
+                                    <text class="content">#{{post.postField.params.xcxTaskTitle}}# </text>
+                                    <text class="day">第{{post.postField.params.xcxStartDay||1}}天</text>
+                                </view>
+                            </view>
+                            <text class="time">{{post.elapseTime}}</text>
+                        </view>
+                    </view>
+                    <view catchtap="showSelectList" class="select-box" data-id="{{post.postId}}" wx:if="{{isAdminUser}}">
+                        <image src="/images/select-arrow.png"></image>
+                        <view class="select-list" hidden="{{!post.isShowSelectList}}">
+                            <view catchtap="deletePost" class="del" data-id="{{post.postId}}" data-xcxposttype="{{post.postField.params.xcxPostType}}">删除</view>
+                            <view catchtap="OPTopPost" data-set="{{post.postType}}">{{post.postType==1?'取消置顶':'置顶'}}</view>
+                        </view>
+                    </view>
+                    <block wx:else>
+                        <view catchtap="deletePost" class="delete" data-id="{{post.postId}}" data-punchId="{{post.postField.params.xcxPunchId}}" data-xcxposttype="{{post.postField.params.xcxPostType}}" wx:if="{{post.canDeleted}}">删除</view>
+                    </block>
+                </view>
+                <view class="dynamic-content">{{post.postField.text}}</view>
+                <view class="list-imgs list-img{{post.postField.images.length}}" data-id="{{post.postId}}" data-xcxposttype="{{post.postField.params.xcxPostType}}">
+                    <block wx:for="{{post.postField.images}}" wx:for-item="img" wx:key="imageitem">
+                        <block wx:if="{{post.postField.images.length>9}}">
+                            <image catchtap="onShowPic" class="img" data-id="{{post.postId}}" data-url="{{img.url}}" mode="aspectFill" src="{{img.src}}" wx:if="{{index<8}}"></image>
+                            <view catchtap="goDetail" class="last" data-id="{{post.postId}}" data-xcxposttype="xcxPostTypePhoto" wx:if="{{index==8}}">
+                                <image mode="aspectFill" src="{{img.src}}"></image>
+                                <view class="more"></view>
+                                <view class="texts">
+                                    <text>查看全部</text>
+                                    <text>{{post.postField.images.length}}张图片</text>
+                                </view>
+                            </view>
+                        </block>
+                        <image catchtap="onShowPic" class="img" data-id="{{post.postId}}" data-url="{{img.url}}" mode="{{post.postField.images.length==1?'widthFix':'aspectFill'}}" src="{{img.src}}" wx:else></image>
+                    </block>
+                </view>
+                <view catchtap="openPunchTask" class="punch2-box" data-punchid="{{post.postField.params.xcxPunchId}}">
+                    <image src="/images/punch_content.png"></image>
+                    <text class="punch-title"># {{post.postField.params.xcxTaskTitle}}</text>
+                    <text class="punch-day" wx:if="{{post.isDelete}}">{{post.postField.params.xcxTaskDays=='0'?'长期':post.postField.params.xcxTaskDays+'天'}}</text>
+                    <block wx:else>
+                        <text class="punch-day-expired" wx:if="{{post.isExpired}}">已结束</text>
+                        <text class="punch-day" wx:else>{{post.postField.params.xcxTaskDays=='0'?'长期':post.postField.params.xcxTaskDays+'天'}}计划</text>
+                    </block>
+                </view>
+            </view>
+            <view catchtap="openPunchTask" class="dynamic-punch" data-punchid="{{post.postId}}" wx:else>
+                <view class="dynamic-box">
+                    <image class="top" hidden="{{post.postType!=1}}" src="/images/top.png"></image>
+                    <view class="people-message">
+                        <view class="people-left">
+                            <image src="{{post.postUser.faceIcon}}"></image>
+                            <view class="text">
+                                <view class="title">
+                                    <text class="name">{{post.postUser.nickname}}</text>
+                                    <text class="hint">发布了一项任务</text>
+                                </view>
+                                <text class="time">{{post.elapseTime}}</text>
+                            </view>
+                        </view>
+                    </view>
+                    <view class="punch-box">
+                        <view class="punch-top">
+                            <image src="/images/punch_tip.png"></image>
+                            <text class="punch-title"># {{post.postField.params.xcxTaskTitle}}</text>
+                            <text class="punch-day" wx:if="{{post.isDelete}}">{{post.postField.params.xcxTaskDays=='0'?'长期':post.postField.params.xcxTaskDays+'天'}}</text>
+                            <block wx:else>
+                                <text class="punch-day-end" wx:if="{{post.isExpired}}">已结束</text>
+                                <text class="punch-day" wx:else>{{post.postField.params.xcxTaskDays=='0'?'长期':post.postField.params.xcxTaskDays+'天'}}</text>
+                            </block>
+                        </view>
+                        <view class="punch-text">
+                            <image src="/images/punch_content.png"></image>
+                            <view class="texts">
+                {{post.postField.text}}
+              </view>
+                        </view>
+                    </view>
+                </view>
+            </view>
+            <view class="dynamic-footer">
+                <view catchtap="goBrowseListDetail" class="icon" data-id="{{post.postId}}" data-xcxposttype="{{post.postField.params.xcxPostType}}">
+                    <image src="../../images/look.png"></image>
+                    <text>{{post.browseRecords||0}}</text>
+                </view>
+                <view catchtap="goDetail" class="icon" data-id="{{post.postId}}">
+                    <image src="../../images/comment.png"></image>
+                    <text>{{post.commentNum}}</text>
+                </view>
+                <view catchtap="praiseButtonTap" class="icon" data-id="{{post.postId}}">
+                    <image src="../../images/praise.png"></image>
+                    <text>{{post.praiseNum}}</text>
+                </view>
+            </view>
+        </view>
+    </block>
+    <view class="no-more" hidden="{{!isEnd||postListData.records.length==0}}">
+      <text>没有更多动态了</text>
+    </view>
+  </view><!-- 动态内容--end -->
+  <!-- 页脚 -->
+  <view class="footer">
+    <button catchtap="publishButtonTap">+ 发布</button>
+  </view>
+</view>
+
+<!-- 弹出菜单 -->
+<view catchtap="hideShade" class="{{isShowChoice?'mask fade_in':'mask hide'}}">
+    <view class="mask-bj"></view>
+    <view class="mask-content">
+        <view catchtap="handlePublish" class="{{showFilePublish?'maskList-box-more':'maskList-box'}}">
+            <view class="maskList">
+              <view class="maskList-img list1">
+                <image src="/images/mask1.png" data-url="vote" />
+              </view>
+              <text>发起投票</text>
+            </view>
+            <view class="maskList">
+              <view class="maskList-img list2">
+                <image src="/images/mask2.png" data-url="photo" />
+              </view>
+              <text>上传图片</text>
+            </view>
+            <view class="maskList">
+              <view class="maskList-img list6">
+                <image src="/images/mask6.png" data-url="video" />
+              </view>
+              <text>上传视频</text>
+            </view>
+            <view class="maskList">
+              <view class="maskList-img list3">
+                <image src="/images/mask3.png" data-url="notice" />
+              </view>
+              <text>发布通知</text>
+            </view>
+            <view class="maskList">
+              <view class="maskList-img list4">
+                <image src="/images/mask4.png" data-url="post" />
+              </view>
+              <text>发布动态</text>
+            </view>
+            <view class="maskList">
+              <view class="maskList-img list5">
+                <image src="/images/mask5.png" data-url="ranking" />
+              </view>
+              <text>运动排行</text>
+            </view>
+        </view>
+    </view>
+</view>
+<view catchtap="hideShade" class="{{isShowChoice?'mask-close':'mask-close hide'}}">
+    <image src="/images/mask-close.png"/>
+</view>
